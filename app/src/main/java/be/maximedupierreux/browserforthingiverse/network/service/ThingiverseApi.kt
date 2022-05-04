@@ -13,8 +13,5 @@ class ThingiverseApi(private val client: HttpClient) {
             append(HttpHeaders.Accept, "application/json")
             append("Authorization", "Bearer ${BuildConfig.API_KEY}")
         }
-        parameter("sort", "newest")
-        parameter("limit", "100")
-        parameter("convert", "USD")
     }
 }
