@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Things (
   val total : Int?,
-  val hits  : List<Hits>
+  val hits  : List<Thing>
 )

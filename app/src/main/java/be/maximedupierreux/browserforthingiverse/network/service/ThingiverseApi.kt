@@ -7,7 +7,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 
 class ThingiverseApi(private val client: HttpClient) {
-    suspend fun getNewest(): Things = client.request("https://api.thingiverse.com/search?sort=newest") {
+    suspend fun getNewest(): Things = client.request("https://api.thingiverse.com/search?sort=popular") {
         method = HttpMethod.Get
         headers {
             append(HttpHeaders.Accept, "application/json")

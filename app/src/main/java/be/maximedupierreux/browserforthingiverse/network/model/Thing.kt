@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Hits (
+data class Thing (
 
   @SerialName("id"            ) var id           : Int?            = null,
   @SerialName("name"          ) var name         : String?         = null,
@@ -16,10 +16,10 @@ data class Hits (
   @SerialName("thumbnail"     ) var thumbnail    : String?         = null,
   @SerialName("preview_image" ) var previewImage : String?         = null,
   @SerialName("creator"       ) var creator      : Creator?        = Creator(),
-  @SerialName("is_private"    ) var isPrivate    : String?         = null,
-  @SerialName("is_purchased"  ) var isPurchased  : String?         = null,
-  @SerialName("is_published"  ) var isPublished  : String?         = null,
-  @SerialName("comment_count" ) var commentCount : String?         = null,
+  @SerialName("is_private"    ) var isPrivate    : Boolean?         = null,
+  @SerialName("is_purchased"  ) var isPurchased  : Boolean?         = null,
+  @SerialName("is_published"  ) var isPublished  : Boolean?         = null,
+  @SerialName("comment_count" ) var commentCount : Int?         = null,
   @SerialName("make_count"    ) var makeCount    : Int?            = null,
   @SerialName("like_count"    ) var likeCount    : Int?         = null,
   @SerialName("tags"          ) var tags         : ArrayList<Tags> = arrayListOf(),
