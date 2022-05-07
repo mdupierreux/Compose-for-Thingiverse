@@ -12,9 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -24,8 +22,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.text
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import be.maximedupierreux.browserforthingiverse.network.model.Creator
@@ -91,7 +93,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 AsyncImage(
                     model = thing.thumbnail,
-                    contentDescription = "test",
+                    contentDescription = null,
                     placeholder = painterResource(id = R.drawable.placeholder),
                     modifier = Modifier.size(80.dp),
                 )
@@ -107,7 +109,7 @@ class MainActivity : ComponentActivity() {
                         }
                         thing.creator?.let { Text(text = it.lastName ?: "") }
                     }
-                    LikeCount(count = thing.likeCount ?: 0)
+                    LikeCount(likeCount = thing.likeCount ?: 0)
                 }
             }
         }
@@ -115,13 +117,19 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun LikeCount(
-        count: Int
+        likeCount: Int
     ) {
+        val cdLikes = stringResource(id = R.string.a11y_thing_likes, likeCount)
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = count.toString())
+            Text(
+                modifier = Modifier.semantics {
+                    text = AnnotatedString(cdLikes)
+                },
+                text = likeCount.toString()
+            )
             Image(painter = painterResource(id = R.drawable.ic_baseline_star_24), contentDescription = null)
         }
     }
@@ -129,7 +137,7 @@ class MainActivity : ComponentActivity() {
     @Preview
     @Composable
     fun LikeCountPreview() {
-        LikeCount(count = 15)
+        LikeCount(likeCount = 15)
     }
 
     @Preview
