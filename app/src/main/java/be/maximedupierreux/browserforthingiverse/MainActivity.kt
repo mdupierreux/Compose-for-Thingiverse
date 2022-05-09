@@ -1,6 +1,8 @@
 package be.maximedupierreux.browserforthingiverse
 
+import android.content.Context
 import android.os.Bundle
+import android.view.accessibility.AccessibilityManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -16,6 +18,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Divider
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -23,6 +26,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -46,6 +50,7 @@ import coil.compose.AsyncImage
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val accessibilityManager = this.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         setContent {
             BrowserForThingiverseTheme {
                 // A surface container using the 'background' color from the theme
@@ -53,24 +58,42 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ThingsList(viewModel = ThingsViewModel(ThingsRepository()))
+                    ThingsList(isAccessibilityEnabled = accessibilityManager.isEnabled && accessibilityManager.isTouchExplorationEnabled,
+                        viewModel = ThingsViewModel(ThingsRepository()))
                 }
             }
         }
     }
 
     @Composable
-    fun ThingsList(viewModel: ThingsViewModel) {
+    fun ThingsList(
+        isAccessibilityEnabled: Boolean,
+        viewModel: ThingsViewModel
+    ) {
         val things by viewModel.things.collectAsState()
         Scaffold(
-            topBar = { TopAppBar(title = { Text(text = stringResource(id = R.string.app_name)) }) },
+            topBar = { TopAppBar(
+                title = { Text(text = stringResource(id = R.string.app_name)) },
+                actions = {
+                    if (isAccessibilityEnabled) {
+                        IconButton(onClick = {}) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = stringResource(id = R.string.search)
+                            )
+                        }
+                    }
+                }
+            ) },
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {},
-                    backgroundColor = MaterialTheme.colors.secondary,
-                    contentColor = MaterialTheme.colors.onSecondary
-                ) {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = null)
+                if (isAccessibilityEnabled) {
+                    FloatingActionButton(
+                        onClick = {},
+                        backgroundColor = MaterialTheme.colors.secondary,
+                        contentColor = MaterialTheme.colors.onSecondary
+                    ) {
+                        Icon(imageVector = Icons.Default.Search, contentDescription = null)
+                    }
                 }
             }
         ) {
@@ -120,8 +143,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.padding(15.dp)
                 ) {
                     thing.name?.let { Text(text = it) }
-                    Row (
-                    ){
+                    Row(modifier = Modifier.semantics(mergeDescendants = true) { }) {
                         thing.creator?.let { Text(
                             modifier = Modifier.padding(end = 8.dp),
                             text = it.firstName ?: "")
