@@ -86,7 +86,7 @@ class MainActivity : ComponentActivity() {
                 }
             ) },
             floatingActionButton = {
-                if (isAccessibilityEnabled) {
+                if (!isAccessibilityEnabled) {
                     FloatingActionButton(
                         onClick = {},
                         backgroundColor = MaterialTheme.colors.secondary,
